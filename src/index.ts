@@ -5,6 +5,7 @@ import { TaskDelete } from "./endpoints/taskDelete";
 import { TaskFetch } from "./endpoints/taskFetch";
 import { TaskList } from "./endpoints/taskList";
 import { IPGet } from "./endpoints/ip";
+import { IPDetails } from "./endpoints/ipDetails";
 
 // Start a Hono app
 const app = new Hono<{ Bindings: Env }>();
@@ -65,6 +66,8 @@ app.get("/", async (c) => {
                 <pre><code>curl ip.nmoura.pt</code></pre>
                 <p>Or access the API endpoint directly:</p>
                 <pre><code>curl ip.nmoura.pt/api/v1/ip</code></pre>
+                <p>For detailed IP information:</p>
+                <pre><code>curl ip.nmoura.pt/api/v1/ip/details</code></pre>
                 <p>For API documentation, visit: <a href="/docs">API Documentation</a></p>
             </body>
         </html>
@@ -82,6 +85,7 @@ openapi.post("/api/tasks", TaskCreate);
 openapi.get("/api/tasks/:taskSlug", TaskFetch);
 openapi.delete("/api/tasks/:taskSlug", TaskDelete);
 openapi.get("/api/v1/ip", IPGet);
+openapi.get("/api/v1/ip/details", IPDetails);
 
 // Export the Hono app
 export default app;
