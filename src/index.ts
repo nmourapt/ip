@@ -10,13 +10,22 @@ import { IPGet } from "./endpoints/ip";
 const app = new Hono<{ Bindings: Env }>();
 
 // Handle root path first
-app.get("/", (c) => {
+app.get("/", async (c) => {
     const userAgent = c.req.header("user-agent") || "";
     const isCurl = userAgent.toLowerCase().includes("curl");
 
     if (isCurl) {
-        // For curl requests, redirect to the IP endpoint
-        return c.redirect("/api/v1/ip");
+        // For curl requests, get the IP directly instead of redirecting
+        const clientIP = c.req.header("cf-connecting-ip") || 
+                        c.req.header("x-forwarded-for") || 
+                        c.req.header("x-real-ip") || 
+                        "Unknown";
+        
+        return new Response(clientIP, {
+            headers: {
+                "content-type": "text/plain",
+            },
+        });
     }
 
     // For non-curl requests, return a simple HTML page
